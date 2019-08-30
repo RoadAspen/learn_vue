@@ -46,12 +46,13 @@
     - `.lazy`  可以将input等输入元素的变量同步时机从 `oninput` 改为 `onchange`。当具体值改变的时候才触发。
     - `.trim` 可以去除掉输入值的前后端的空格。
 
-+ 事件修饰符  eg： `@click.stop  `
++ 事件修饰符  eg： `@click.stop  ` 可以链式调用，但是对顺序有要求，顺序不同，产生的效果也不同
     - `stop` 阻止冒泡 
     -  `prevent` 阻止默认事件
     - `aptuare` 在捕获阶段执行 
     - `once` 只执行一次
     - `self` 当 `e.target` 为元素自身的时候调用。
+    - `native` 在根元素上监听事件。
 
 + 按键修饰符
     - `keyup.alt.67` 即按着`alt`键，按下`67`键。
@@ -70,22 +71,68 @@
 + v-show 显示
     - `v-show` 通过修改 组件的 `display` ， 在 `block` 与 `none` 中转换。 
 
+# Vue 自定义指令
+
++ 通过 `Vue.directive(name,options)`.
+    - `name` 定义的指令。
+    - `option` 的组成。
+        - 状态，值是一个回调函数，，在函数中去执行相应的操作。
+        - 可根据不同的状态去定义不同的回调函数来调用，执行不同的操作。
+
++ 钩子函数
+    - `bind`,第一次绑定到元素上的时候调用，只调用一次。多用于初始化的时候。
+    - `inserted` 即在组件插入到父元素之后，触发这个函数。
+    - `update` 当被绑定模板更新时调用。
+    - `componentUpdated` 被绑定元素所在模板完成一次更新周期时调用。
+    - `unbind` 只调用一次， 指令与元素解绑时调用。
+
++ 钩子函数参数
+    - `el` 指令绑定的元素，可用于直接操作DOM。
+    - `binding` 一个对象，包含以下几点
+        - `name` 指令名，不包含`v-`
+    - `vnode` 编译生成的虚拟节点。
+    - `oldVnode` 上一个虚拟节点，仅在 `update`,`componentUpdated` 中使用。
 # Vue 属性
 
-+ computed 计算属性
++ `computed 计算属性`
     - 一般情况下是为了简写插值表达式，将html中的插值表达式中的js表达式转移到 computed中。
-    - computed 一般定的规则是用于 变量的getter方法。即在变量取值的时候执行计算属性定义的响应函数。
-    - computed 依赖缓存，当变量依赖于其他变量时，如果其他变量都没变，则计算属性也不会改变，当其依赖变量改变时，该计算属性也会做出相应的计算并改变，否则就基于他的依赖缓存取值。
-    - computed属性定义的函数一般指定的是属性的gutter，如果需要也可以定义属性的setter，可以在属性赋值的时候，做一些其他的事情。getter函数也要单独作为get方法定义在属性上，setter函数作为 set方法定义在属性上。
+    - 一般定的规则是用于 变量的`getter`方法。即在变量取值的时候执行计算属性定义的响应函数。
+    - `computed` 依赖缓存，当变量依赖于其他变量时，如果其他变量都没变，则计算属性也不会改变，当其依赖变量改变时，该计算属性也会做出相应的计算并改变，否则就基于他的依赖缓存取值。
+    - `computed`属性定义的函数一般指定的是属性的`gutter`，如果需要也可以定义属性的`setter`，可以在属性赋值的时候，做一些其他的事情。`getter`函数也要单独作为`get`方法定义在属性上，`setter`函数作为 `set`方法定义在属性上。
  
-+ methods 方法
++ `methods 方法`
     - `html`中的插值也可以通过直接调用 methods中的方法来获取值。
     - `methods` 与 `computed` 的区别在于，`computed`只有在当依赖变量改变时才会重新求值。而`methods`会在每次重新加载时都活重新执行。
     - 总的来说。`computed` 比 `methods`的性能好一点，但如果你不希望使用缓存的时候，`methods`将会是你最好的选择。
 
-+ watch 监听属性
++ `watch 监听属性`
     - 用于对 计算属性的补充，即当属性改变时，如果发生比较多的关联操作时，就会用到`watch`属性,比如 当属性改变时涉及`ajax`操作等。
     - watch 属性有两个值，分别是oldval 和val ，以此来做响应的操作。
     - 不要滥用，`computed` 和`methods` 基本满足日常需要。
 
-+ 
++ `data 组件的值。`
+    - 当组件为单一组件时，可以将data直接设置为 对象。
+    - 当组件可以复用的时候，data必须作为一个返回一个对象的函数来使用。否则会导致所有引用该组件的地方的状态同时被改变。
+    - 正常情况下，使用函数返回对象的方法替代直接定义对象。
+
+# Vue 组件 component
+
++   `全局定义组件`
+    - 使用 `Vue.Component(name,options)` 来定义组件。`name` 为 组件的名称.
+    -  `options` 的构成 
+        - `template` html模板。
+        - `props` 传递进来的属性数组。
+        - `data` 一个返回对象的函数，作为组件本身的状态，必须是一个函数。
+        - `methods` 组件中的方法，和 Vue 中相似。
+        - `watch` 属性监听，和 Vue 类似。
+        - `computed` 计算属性，和 Vue中的computed类似。
++ `局部组件`
+    - 局部组件，即在当前实例中可用的组件，不使用`Vue.component` 创建, 使用 对象字面量形式创建。
+    - eg：`var newcomponent = {template:'<p>z这里是局部组件</p>}`。构成和全局组件的构成相似。
+
++ `props 验证规则`
+    - eg： `props:{propname1:{type:String,required:true,default:'sdd'},propname2:String}`
+
++ `自定义事件` - 组件的prop 是通过 父组件传入进去的，如果在子组件中，需要修改传入的变量，并把变量传递回父组件，那么就需要自定义事件。
+    -  说白了，自定义事件就是要通过触发自定义事件，进而触发父组件中定义的修改父组件状态的方法，从而达到子组件修改父组件的功能实现。
+    - eg： 子组件 定义属性 `v-on:hahaha = parentEvent`, 在子组件的html元素上定义`v-on:click = checkthis`, 在`checkthis`中 执行`$emit('hahaha')`,这样就可以执行父组件中定义的`parentEvent`方法。
