@@ -8,8 +8,8 @@
     - 同样的，v-text 也不能用于双向绑定，且会覆盖DOM元素原先的children。
     - 没有缩写。
 + v-html  主要用于 html 绑定
-    - 主要用于绑定变量到DOM元素内部，与 `v-text` 不同的格式，v-html 可以将字符串中的html标签解析出来。
-    - 同样的，v-html 也不能用于双向绑定，且会覆盖DOM元素原先的children。
+    - 主要用于绑定变量到DOM元素内部，与 `v-text` 不同的格式，`v-html` 可以将字符串中的html标签解析出来。
+    - 同样的，`v-html` 也不能用于双向绑定，且会覆盖DOM元素原先的children。
     - 没有缩写。
 + {{ }} 主要用于属性计算或者属性判断
     - 双括号主要用于将变量绑定到DOM元素内部，与`v-text`的功能相当。
@@ -19,6 +19,7 @@
     - 双大括号中可以写 变量、算数表达式、三目运算符、链式调用 等，其他js表达式则不能生效。
 
 + v-model 双向数据绑定
+    - vue 双向绑定，根据 Object.defineProperty 的setter ，getter 来监听数据的改变。
     - v-model 是Vue中惟一的双向数据绑定指令，常用于`input`、`select`、`textarea` 等可以输入操作的控件中。当你输入的时候修改Vue中的变量。
     - v-model 没有缩写。
 
